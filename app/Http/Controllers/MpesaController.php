@@ -14,7 +14,13 @@ class MpesaController extends Controller
      */
     public function index()
     {
-        return $this->lipa("1","254702583807","Test");
+        $response=$this->lipa('254701583807',1,1);
+        if(isset($response->ResponseCode) && $response->ResponseCode==0){
+            return redirect('/')->with("success","A prompt has been sent. Enter pin to proceed.");
+        }
+        else{
+            return back()->with("error","An error was found.");
+        }
     }
 
     /**
@@ -28,12 +34,15 @@ class MpesaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store($account)
+    public function store()
     {
         $contact = request('contact');
         $amount = request('amount');
         $account = request('account');
-        return $this->lipa( $amount, $contact,$account);
+        $response= $this->lipa($contact,$amount,$account);
+        if($response->has("ResponseCode")&& $response->ResponseCode==0){
+            return redirect('/')->with("success","A prompt has been sent. Enter pin to proceed.");
+        }
     }
 
     /**
@@ -106,21 +115,21 @@ class MpesaController extends Controller
         $lipa_na_mpesa_password = base64_encode($BusinessShortCode . $passkey . $timestamp);
         return $lipa_na_mpesa_password;
     }
-    public function lipa($amount,$contact,$account){
+    public function lipa($phone,$amount,$account){
         $data = [
-            'BusinessShortCode' => env('MPESA_SHORT_CODE'),
-            'Password' => $this->lipaNaMpesaPassword(),
-            'Timestamp' => date('YmdHis'),
-            'TransactionType' => 'CustomerPayBillOnline',
-            'Amount' => $amount,
-            'PartyA' => $contact,
-            'PartyB' => env('MPESA_SHORT_CODE'),
-            'PhoneNumber' => $contact,
-            'CallBackURL' => 'https://krapms.apektechinc.com/api/payment/callback/' . $account,
-            'AccountReference' => "PAYE Remittance",
-            'TransactionDesc' => "PAYE Remittance"
+            "BusinessShortCode"=> env('MPESA_SHORT_CODE'),    
+            "Password"=>$this->lipaNaMpesaPassword(),    
+            "Timestamp"=> date('YmdHis'),    
+            "TransactionType"=> "CustomerPayBillOnline",    
+            "Amount"=> $amount,    
+            "PartyA"=>$phone,    
+            "PartyB"=>"174379",    
+            "PhoneNumber"=>$phone,    
+            "CallBackURL"=> "https://krapms.apektechinc.com/api/payment/callback/".$account,    
+            "AccountReference"=>"PAYE Remittance",    
+            "TransactionDesc"=>"PAYE Remittance"
         ];
-        $url = (env('MPESA_ENV') == 'live') ? 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest' : 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query';
+        $url ='https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
         $response = Http::withOptions(['verify'=>false])->withBody(json_encode($data))->withHeader(
             'Authorization' ,'Bearer '.$this->generate_token()
         )->post($url);
