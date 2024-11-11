@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes();
-Route::post("/logout", function () {
+Route::get("/logout", function () {
     Auth::logout();
     return redirect("/");
  });
