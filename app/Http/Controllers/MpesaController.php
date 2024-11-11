@@ -116,7 +116,7 @@ class MpesaController extends Controller
             'PartyA' => $contact,
             'PartyB' => env('MPESA_SHORT_CODE'),
             'PhoneNumber' => $contact,
-            'CallBackURL' => 'https://class.apektechinc.com/api/payment/callback/' . $account,
+            'CallBackURL' => 'https://krapms.apektechinc.com/api/payment/callback/' . $account,
             'AccountReference' => "PAYE Remittance",
             'TransactionDesc' => "PAYE Remittance"
         ];
