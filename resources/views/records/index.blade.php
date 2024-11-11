@@ -2,7 +2,7 @@
 @section('content')
 <!-- Button trigger modal -->
 <div class="text-center mb-2">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#payee">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pay">
         Register PAYE
     </button>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#record">
@@ -11,7 +11,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="payee" tabindex="-1" aria-labelledby="payee" aria-hidden="true">
+<div class="modal fade" id="pay" tabindex="-1" aria-labelledby="pay" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -133,7 +133,7 @@
         <th>NSSF</th>
         <th>Payee</th>
         <th>Status</th>
-        <th colspan="4" class="text-center">Action</th>
+        <th colspan="{{$item->status==false?'4':'3'}}" class="text-center">Action</th>
     </thead>
     <tbody>
         @foreach ($items as $key => $item)
@@ -174,6 +174,7 @@
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </td>
+                @if($item->status==false)
                 <td>
                     <button class="btn btn-warning text-dark" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pay{{$item->id}}">Pay Tax</button>
                     <div class="modal fade" id="pay{{$item->id}}" tabindex="-1" aria-labelledby="pay{{$item->id}}" aria-hidden="true">
@@ -197,7 +198,7 @@
                                                 <input id="contact" type="text"
                                                     class="form-control @error('contact') is-invalid @enderror"
                                                     name="contact" value="{{ old('contact') }}" required
-                                                    autocomplete="contact" autofocus minlength="12" maxlength="12" placeholder="254xxxxxxxxx">
+                                                    autocomplete="contact" autofocus value="{{$item->user->contact}}">
                                                 @error('contact')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -215,6 +216,7 @@
                         </div>
                     </div>
                 </td>
+                @endif
             </tr>
         @endforeach
     </tbody>
