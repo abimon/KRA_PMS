@@ -33,7 +33,7 @@ class MpesaController extends Controller
         $contact = request('contact');
         $amount = request('amount');
         $account = request('account');
-        return $this->lipa($account, $amount, $contact);
+        return $this->lipa( $amount, $contact,$account);
     }
 
     /**
