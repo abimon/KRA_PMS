@@ -144,7 +144,15 @@
                 <td>{{$item->insurance}}</td>
                 <td>{{$item->pension}}</td>
                 <td>{{$payee[$key]}}</td>
-                <td>{{$item->status}}</td>
+                <td>
+                    @if ($item->status==true)
+                    <span class='text-success'>Payment Successful</span>
+                    @else
+                    <div class="text-danger">
+                    Pending Payment
+                    </div>
+                    @endif
+                </td>
                 <td>
                     <form action="{{route('payee.show', $item->id)}}" method="post">
                         @csrf
