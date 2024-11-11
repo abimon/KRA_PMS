@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes();
+Route::post("/logout", function () {
+    Auth::logout();
+    return redirect("/");
+ });
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resources([
     'payee'=>PayController::class,
