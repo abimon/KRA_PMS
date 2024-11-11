@@ -8,4 +8,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('api/payment/callback/{acount}', [MpesaController::class, 'update']);
+Route::post('api/payment/callback/{account}', [MpesaController::class, 'update']);
