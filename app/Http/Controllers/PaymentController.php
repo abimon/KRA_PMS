@@ -44,7 +44,7 @@ class PaymentController extends Controller
                 "currency" => "KES",
                 "amount" => $amount,
                 "description" => "Payment description goes here",
-                "callback_url" => "https://krapms.apektechinc.com/payment/update",
+                "callback_url" => "https://krapms.apektechinc.com/payment/save",
                 "redirect_mode" => "",
                 "notification_id" => $this->generate_ipn(),
                 "branch" => "Main Store",
@@ -83,7 +83,24 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        //
+        
+    }
+    public function save(){
+        $pay = Payment::where([["tracking_id", request('OrderTrackingId')], ['merchant_reference', request('OrderMerchantReference')]])->first();
+        $url = 'https://pay.pesapal.com/v3/api/Transactions/GetTransactionStatus?orderTrackingId=' . $pay->tracking_id;
+        $res = Http::withToken($this->generate_token())->withHeaders(['Content-Type : application/json'])->get($url);
+        $response = json_decode($res);
+        if ($response->status == '200') {
+            $pay->payment_account = $response->payment_account;
+            $pay->amount = $response->amount;
+            $pay->payment_method = $response->payment_method;
+            $pay->confirmation_code = $response->confirmation_code;
+            $pay->payment_status_description = $response->payment_status_description;
+            $pay->update();
+            Pay::where('id', $pay->TransactionId)->update(['status' => true]);
+            return redirect('/payee')->with('success','Payment made successfully.');
+        }
+        return $response;
     }
 
     /**
@@ -118,21 +135,7 @@ class PaymentController extends Controller
      */
     public function update()
     {
-        $pay = Payment::where([["tracking_id", request('OrderTrackingId')], ['merchant_reference', request('OrderMerchantReference')]])->first();
-        $url = 'https://pay.pesapal.com/v3/api/Transactions/GetTransactionStatus?orderTrackingId=' . $pay->tracking_id;
-        $res = Http::withToken($this->generate_token())->withHeaders(['Content-Type : application/json'])->get($url);
-        $response = json_decode($res);
-        if ($response->status == '200') {
-            $pay->payment_account = $response->payment_account;
-            $pay->amount = $response->amount;
-            $pay->payment_method = $response->payment_method;
-            $pay->confirmation_code = $response->confirmation_code;
-            $pay->payment_status_description = $response->payment_status_description;
-            $pay->update();
-            Pay::where('id', $pay->TransactionId)->update(['status' => true]);
-            return redirect('/payee')->with('success','Payment made successfully.');
-        }
-        return $response;
+        
     }
 
     /**

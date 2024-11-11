@@ -19,3 +19,4 @@ Route::resources([
     'mpesa'=>MpesaController::class,
     'payment'=>PaymentController::class
 ]);
+Route::post('save', [PaymentController::class, 'save']);
