@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pay;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PayController extends Controller
 {
@@ -12,7 +14,13 @@ class PayController extends Controller
      */
     public function index()
     {
-        //
+        $items = Pay::all();
+        $payee = [];
+        foreach ($items as $item) {
+            $tax = $this->payee($item->id);
+            array_push($payee, $tax);
+        }
+        return view("records.index", compact("items","payee"));
     }
 
     /**
@@ -28,16 +36,66 @@ class PayController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // $val = validator(request()->all(), [
+        //     "user_id" => "required",
+        //     "basic_salary" => "required",
+        //     "allowances" => "required",
+        //     "pension" => "required",
+        //     "insurance" => "required",
+        //     // "period" => "required",
+        // ]);
+        // if ($val->fails()) {
+        //     return back()->withErrors($val)->withInput();
+        // }
+        Pay::create([
+            'user_id' => request('user_id'),
+            'basic_salary' => request('basic_salary'),
+            'allowances' => request('allowances'),
+            'pension' => request('pension'),
+            'insurance' => request('insurance'),
+            // 'period' => request('period')
+            'period' => 'Monthly'
+
+        ]);
+        return back()->with('success','Success');
     }
+
 
     /**
      * Display the specified resource.
      */
     public function show($id)
     {
-
+        $item = Pay::findOrFail($id);
+        $paye = $this->payee($item->id);
+        $pdf = Pdf::loadView('paye_slip', compact('item','paye'));
+        return $pdf->stream();
+        // return view();
     }
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Pay $pay)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Pay $pay)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Pay $pay)
+    {
+        //
+    }
+
     public function payee($id)
     {
         // Gross income = Basic salary + Allowances
@@ -69,27 +127,28 @@ class PayController extends Controller
         }
         return $payee;
     }
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Pay $pay)
+    function generate_token()
     {
-        //
+        $consumer_key = 'jnOrXQoEp9v2nczb2tCQvi6hzulzdfxMqsb41d6unZwyVxzu';
+        $consumer_secret = 'lZbyHMiXCo880XHcOUyQRpOeCUBGQVNPwtMakHRbFKlpHALhhW0G9fqkVzBjIv94';
+        $data = json_encode([
+            'username' => $consumer_key,
+            'password' => $consumer_secret
+        ]);
+        $key = "ClLDVimTeiz8P0LKHWc5ZqNNapRrCblJOjBsvVV5VfPaV3Ez";
+        $url = 'https://sandbox.developer.go.ke/oauth2/v1/generate?grant_type=client_credentials';
+        $response = Http::withOptions(['verify' => false])->withBasicAuth($consumer_key, $consumer_secret)->withBody($data, 'application/json')->withHeaders(['Content-Type : application/json'])->post($url);
+        $access_token = json_decode($response);
+        return $access_token->access_token;
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Pay $pay)
+    function verifyPIN($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Pay $pay)
-    {
-        //
+        $url = 'https://sandbox.developer.go.ke/v1/kra-pin/validate';
+        $data = json_encode([
+            'taxpayerID' => $id,
+            'typeOfTaxpayer'=>'KE'
+        ]);
+        $response = Http::withOptions(['verify' => false])->withToken('Bearer '.$this->generate_token())->withBody($data, 'application/json')->withHeaders(['Content-Type : application/json'])->post($url);
+        return response()->json($response);
     }
 }

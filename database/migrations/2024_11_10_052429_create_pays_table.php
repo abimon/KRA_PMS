@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer("pension");
             $table->integer("insurance");
             $table->string("period");
+            $table->boolean("status")->default(false);
             $table->timestamps();
             $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade");
         });
