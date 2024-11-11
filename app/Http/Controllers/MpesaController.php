@@ -6,6 +6,7 @@ use App\Models\Mpesa;
 use App\Models\Pay;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class MpesaController extends Controller
 {
@@ -65,6 +66,7 @@ class MpesaController extends Controller
     public function update($account)
     {
         $res = request();
+        Log::info(json_encode($res));
         $message = $res['Body']['stkCallback']['ResultDesc'];
         $amount = $res['Body']['stkCallback']['CallbackMetadata']['Item'][0]['Value'];
         $TransactionId = $res['Body']['stkCallback']['CallbackMetadata']['Item'][1]['Value'];
