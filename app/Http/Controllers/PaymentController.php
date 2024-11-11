@@ -109,7 +109,7 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         $id = request('id');
-        $amount = request('amount');
+        $amount = 10;
         $account = request('account');
         return $this->pay($amount,$account,$id);
     }

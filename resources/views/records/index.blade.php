@@ -189,7 +189,7 @@
                                     @csrf
                                     <div class="modal-body">
                                         <input type="hidden" name="account" value="{{$item->id}}">
-                                        <input type="hidden" name="amount" value="1">
+                                        <input type="hidden" name="amount" value="5">
                                         <input type="hidden" name="id" value="{{$item->user->id}}">
                                         <div class="row mb-3">
                                             <label for="contact" class="col-md-6 col-form-label text-md-end text-dark">{{ __('Mpesa Phone Number') }}</label>
