@@ -133,7 +133,7 @@
         <th>NSSF</th>
         <th>Payee</th>
         <th>Status</th>
-        <th colspan="{{$item->status==false?'4':'3'}}" class="text-center">Action</th>
+        <th colspan="4" class="text-center">Action</th>
     </thead>
     <tbody>
         @foreach ($items as $key => $item)
@@ -216,6 +216,8 @@
                         </div>
                     </div>
                 </td>
+                @else
+                <td></td>
                 @endif
             </tr>
         @endforeach
