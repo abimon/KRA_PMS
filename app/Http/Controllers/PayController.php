@@ -36,26 +36,13 @@ class PayController extends Controller
      */
     public function store(Request $request)
     {
-        // $val = validator(request()->all(), [
-        //     "user_id" => "required",
-        //     "basic_salary" => "required",
-        //     "allowances" => "required",
-        //     "pension" => "required",
-        //     "insurance" => "required",
-        //     // "period" => "required",
-        // ]);
-        // if ($val->fails()) {
-        //     return back()->withErrors($val)->withInput();
-        // }
         Pay::create([
             'user_id' => request('user_id'),
             'basic_salary' => request('basic_salary'),
             'allowances' => request('allowances'),
             'pension' => request('pension'),
             'insurance' => request('insurance'),
-            // 'period' => request('period')
             'period' => 'Monthly'
-
         ]);
         return back()->with('success','Success');
     }
@@ -69,6 +56,7 @@ class PayController extends Controller
         $item = Pay::findOrFail($id);
         $paye = $this->payee($item->id);
         $pdf = Pdf::loadView('paye_slip', compact('item','paye'));
+        $pdf->setPaper('B5', 'portrait');
         return $pdf->stream();
         // return view();
     }

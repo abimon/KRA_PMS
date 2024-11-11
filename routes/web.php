@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MpesaController;
 use App\Http\Controllers\PayController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -10,4 +11,5 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::resources([
     'payee'=>PayController::class,
     'user'=> UserController::class,
+    'mpesa'=>MpesaController::class,
 ]);

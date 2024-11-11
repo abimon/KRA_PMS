@@ -3,7 +3,7 @@
 <!-- Button trigger modal -->
 <div class="text-center mb-2">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#payee">
-        Register Payee
+        Register PAYE
     </button>
 </div>
 
@@ -12,7 +12,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="payee">Register Payee</h1>
+                <h1 class="modal-title fs-5" id="payee">Register PAYE</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{route('payee.store')}}" method="post">
