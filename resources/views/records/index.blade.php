@@ -101,7 +101,7 @@
         <th>NSSF</th>
         <th>Payee</th>
         <th>Status</th>
-        <th colspan="3" class="text-center">Action</th>
+        <th colspan="4" class="text-center">Action</th>
     </thead>
     <tbody>
         @foreach ($items as $key => $item)
@@ -133,6 +133,46 @@
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
+                </td>
+                <td>
+                    <button class="btn btn-warning text-dark" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pay{{$item->id}}">Pay Tax</button>
+                    <div class="modal fade" id="pay{{$item->id}}" tabindex="-1" aria-labelledby="pay{{$item->id}}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="payee">Make Payment</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <form action="{{route('mpesa.store')}}" method="post">
+                                    @csrf
+                                    <div class="modal-body">
+                                        <input type="hidden" name="account" value="{{$item->id}}">
+                                        <input type="hidden" name="amount" value="1">
+                                        <div class="row mb-3">
+                                            <label for="contact" class="col-md-6 col-form-label text-md-end text-dark">{{ __('Mpesa Phone Number') }}</label>
+
+                                            <div class="col-md-6">
+                                                <input id="contact" type="text"
+                                                    class="form-control @error('contact') is-invalid @enderror"
+                                                    name="contact" value="{{ old('contact') }}" required
+                                                    autocomplete="contact" autofocus minlength="12" maxlength="12" placeholder="254xxxxxxxxx">
+                                                @error('contact')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-success">Make Payment</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         @endforeach

@@ -14,13 +14,8 @@ class MpesaController extends Controller
      */
     public function index()
     {
-        $response=$this->lipa('254701583807',1,1);
-        if(isset($response->ResponseCode) && $response->ResponseCode==0){
-            return redirect('/')->with("success","A prompt has been sent. Enter pin to proceed.");
-        }
-        else{
-            return back()->with("error","An error was found.");
-        }
+        $items = Mpesa::all();
+        return view("mpesa.index", compact("items"));
     }
 
     /**
@@ -40,8 +35,11 @@ class MpesaController extends Controller
         $amount = request('amount');
         $account = request('account');
         $response= $this->lipa($contact,$amount,$account);
-        if($response->has("ResponseCode")&& $response->ResponseCode==0){
+        if(isset($response->ResponseCode) && $response->ResponseCode==0){
             return redirect('/')->with("success","A prompt has been sent. Enter pin to proceed.");
+        }
+        else{
+            return back()->with("error","An error was found.");
         }
     }
 
