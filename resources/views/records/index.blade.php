@@ -5,6 +5,9 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#payee">
         Register PAYE
     </button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#record">
+        Get PAYE Records
+    </button>
 </div>
 
 <!-- Modal -->
@@ -92,6 +95,35 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="record" tabindex="-1" aria-labelledby="payee" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="payee">Get PAYE Records</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{route('payee.edit',3)}}" method="post">
+                @csrf
+                @method('GET')
+                <div class="modal-body">
+                    <div class="row">
+                        <label for="from" class="col-md-4">From</label>
+                        <input type="date" name="from" id="" class="form-control">
+                    </div>
+                    <div class="row">
+                        <label for="to" class="col-md-4">To</label>
+                        <input type="date" name="to" id="" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <table class="table table-responsive">
     <thead>
         <th>#</th>
@@ -144,11 +176,12 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                <form action="{{route('mpesa.store')}}" method="post">
+                                <form action="{{route('payment.store')}}" method="post">
                                     @csrf
                                     <div class="modal-body">
                                         <input type="hidden" name="account" value="{{$item->id}}">
                                         <input type="hidden" name="amount" value="1">
+                                        <input type="hidden" name="id" value="{{$item->user->id}}">
                                         <div class="row mb-3">
                                             <label for="contact" class="col-md-6 col-form-label text-md-end text-dark">{{ __('Mpesa Phone Number') }}</label>
 

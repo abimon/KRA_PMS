@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('mname')->nullable();
             $table->string('lname');
             $table->string('email')->unique();
+            $table->string('contact');
             $table->string('role');
+            $table->string('employer');
+            $table->string('employer_kra');
             $table->string('kra_pin')->nullable();
             $table->string('id_number')->nullable();
             $table->boolean('isAdmin');

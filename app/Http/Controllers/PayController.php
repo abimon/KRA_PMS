@@ -66,7 +66,16 @@ class PayController extends Controller
      */
     public function edit(Pay $pay)
     {
-        //
+        $transactions = Pay::where([['user_id', Auth::user()->id],['created_at','<=',request('to')],['created_at','>=',request('from')]])->get();
+        $payee = [];
+        foreach($transactions as $transaction){
+            $tax = $this->payee($transaction->id);
+            array_push($payee, $tax);
+        }
+        $pdf = Pdf::loadView('report', compact('transactions', 'payee'));
+        $pdf->setPaper('A4','Portrait');
+        return $pdf->stream();
+        // return view('report', compact('transactions','payee'));
     }
 
     /**
