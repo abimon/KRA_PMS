@@ -16,14 +16,18 @@ class PayController extends Controller
      */
     public function index()
     {
-        $items = Pay::where('user_id', Auth::user()->id)->get();
-        $payments = Payment::where('user_id', Auth::user()->id)->get();
+        if(Auth::user()->isAdmin){
+            $items = Pay::all();
+        }
+        else{
+            $items = Pay::where('user_id', Auth::user()->id)->get();
+        }
         $payee = [];
         foreach ($items as $item) {
             $tax = $this->payee($item->id);
             array_push($payee, $tax);
         }
-        return view("home", compact("items","payee",'payments'));
+        return view("records.index", compact("items","payee"));
     }
 
     /**

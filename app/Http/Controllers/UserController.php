@@ -51,9 +51,44 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update($id)
     {
-        //
+        $user = User::findOrFail($id);
+        if (request('fname') != null) {
+            $user->fname = request('fname');
+        }
+        if (request('lname') != null) {
+            $user->lname = request('lname');
+        }
+        if (request('employer') != null) {
+            $user->employer = request('employer');
+        }
+        if (request('kpin') != null) {
+            $user->kpin = request('kpin');
+        }
+        if (request('employer_kra') != null) {
+            $user->employer_kra = request('employer_kra');
+        }
+        if (request('nid') != null) {
+            $user->nid = request('nid');
+        }
+        if (request('contact') != null) {
+            $user->contact = request('contact');
+        }
+        if (request('email') != null) {
+            $user->email = request('email');
+        }
+        if (request('password') != null) {
+            $user->password = request('password');
+        }
+        if (request('role') != null) {
+            $user->role = request('role');
+        }
+        if (request('isAdmin') != null) {
+            $user->isAdmin = request('isAdmin');
+        }
+        $user->update();
+        return back()->with('success', 'User details updated successfully.');
     }
 
     /**

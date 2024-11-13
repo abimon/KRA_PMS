@@ -1,5 +1,5 @@
-@extends('layouts.app')
-@section('content')
+@extends('layouts.dashboard',['title'=>'Salary Records'])
+@section('dashboard')
 <!-- Button trigger modal -->
 <div class="text-center mb-2">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pay">

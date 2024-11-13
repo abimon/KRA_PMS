@@ -9,7 +9,7 @@
         <th>KRA PIN</th>
         <th>ID</th>
         <th>Role</th>
-        <th colspan="3" style="text-align:center;">Action</th>
+        <th colspan="{{Auth()->user()->isAdmin?4:3}}" style="text-align:center;">Action</th>
     </thead>
     <tbody>
         @foreach ($users as $key => $user)
@@ -42,6 +42,16 @@
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </td>
+                @if(AUth()->user()->isAdmin)
+                <td>
+                    <form action="{{route('user.update', $user->id)}}" method="post">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="isAdmin" value="1">
+                        <button type="submit" class="btn btn-danger">Make Admin</button>
+                    </form>
+                </td>
+                @endif
             </tr>
         @endforeach
     </tbody>
