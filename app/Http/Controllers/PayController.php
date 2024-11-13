@@ -21,7 +21,7 @@ class PayController extends Controller
             $tax = $this->payee($item->id);
             array_push($payee, $tax);
         }
-        return view("records.index", compact("items","payee"));
+        return view("home", compact("items","payee"));
     }
 
     /**

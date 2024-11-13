@@ -12,7 +12,7 @@ Route::get("/logout", function () {
     Auth::logout();
     return redirect("/");
  });
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [PayController::class, 'index'])->name('home');
 Route::resources([
     'payee'=>PayController::class,
     'user'=> UserController::class,
@@ -20,3 +20,6 @@ Route::resources([
     'payment'=>PaymentController::class
 ]);
 Route::get('/payments/save', [PaymentController::class, 'save']);
+Route::get('/index', function () {
+    return view('index');
+});

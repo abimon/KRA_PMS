@@ -1,5 +1,5 @@
-@extends('layouts.app')
-@section('content')
+@extends('layouts.dashboard',['title'=>'Users'])
+@section('dashboard')
 <table class="table table-responsive h-100">
     <thead style="white-space:nowrap;">
         <th>#</th>
