@@ -36,7 +36,7 @@ class HomeController extends Controller
         }
         $payee = [];
         foreach ($items as $item) {
-            $tax = $this->payee($item->id);
+            $tax = app(PayController::class)->payee($item->id);
             array_push($payee, $tax);
         }
         return view("home", compact("items","payee",'payments'));
