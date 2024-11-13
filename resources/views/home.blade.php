@@ -281,7 +281,7 @@
                         <td>{{date_format($item->updated_at, 'jS F, Y')}}</td>
                         <td>{{$item->user->fname}} {{$item->user->lname}}</td>
                         <td>{{$item->basic_salary}}</td>
-                        <th>{{$item->Allowances}}</th>
+                        <th>{{$item->allowances}}</th>
                         <td>{{$item->insurance}}</td>
                         <td>{{$item->pension}}</td>
                         <td>{{$payee[$key]}}</td>
