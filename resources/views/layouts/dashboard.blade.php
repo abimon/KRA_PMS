@@ -59,11 +59,11 @@
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="/" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a href="{{route('payee.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>PAYE Records</a>
-                    <a href="{{route('payment.index')}}" class="nav-item nav-link"><i class="fa fa-hand-holding-dollar me-2"></i>Transactions</a>
+                    <a href="/" class="nav-item nav-link {{request()->path()=='/'?'active':''}}"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="{{route('payee.index')}}" class="nav-item nav-link {{request()->path()=='payee'?'active':''}}"><i class="fa fa-th me-2"></i>PAYE Records</a>
+                    <a href="{{route('payment.index')}}" class="nav-item nav-link {{request()->path()=='payment'?'active':''}}"><i class="fa fa-hand-holding-dollar me-2"></i>Transactions</a>
                     @if(Auth()->user()->isAdmin)
-                    <a href="{{route('user.index')}}" class="nav-item nav-link"><i class="fa fa-users me-2"></i>Users</a>
+                    <a href="{{route('user.index')}}" class="nav-item nav-link {{request()->path()=='user'?'active':''}}"><i class="fa fa-users me-2"></i>Users</a>
                     @endif
                 </div>
             </nav>
