@@ -11,15 +11,14 @@ Auth::routes();
 Route::get("/logout", function () {
     Auth::logout();
     return redirect("/");
- });
-Route::get('/', [PayController::class, 'index'])->name('home');
-Route::resources([
-    'payee'=>PayController::class,
-    'user'=> UserController::class,
-    'mpesa'=>MpesaController::class,
-    'payment'=>PaymentController::class
-]);
-Route::get('/payments/save', [PaymentController::class, 'save']);
-Route::get('/index', function () {
-    return view('index');
 });
+Route::middleware('auth')->group(function () {
+    Route::get('/', [PayController::class, 'index'])->name('home');
+    Route::resources([
+        'payee' => PayController::class,
+        'user' => UserController::class,
+        'mpesa' => MpesaController::class,
+        'payment' => PaymentController::class
+    ]);
+});
+Route::get('/payments/save', [PaymentController::class, 'save']);
