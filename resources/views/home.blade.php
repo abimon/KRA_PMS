@@ -108,7 +108,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(App\Models\Payment::all() as $key => $item)
+                    @foreach($payments as $key => $item)
                         <tr>
                             <td><input class="form-check-input" type="checkbox"></td>
                             <td>{{date_format($item->updated_at, 'jS F, Y')}}</td>

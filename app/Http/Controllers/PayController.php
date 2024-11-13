@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pay;
+use App\Models\Payment;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,12 +17,13 @@ class PayController extends Controller
     public function index()
     {
         $items = Pay::where('user_id', Auth::user()->id)->get();
+        $payments = Payment::where('user_id', Auth::user()->id)->get();
         $payee = [];
         foreach ($items as $item) {
             $tax = $this->payee($item->id);
             array_push($payee, $tax);
         }
-        return view("home", compact("items","payee"));
+        return view("home", compact("items","payee",'payments'));
     }
 
     /**
