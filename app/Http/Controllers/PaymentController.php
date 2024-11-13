@@ -75,7 +75,13 @@ class PaymentController extends Controller
     }
     public function index()
     {
-        
+        if(Auth::user()->isAdmin){
+            $items = Payment::all();
+        }
+        else{
+            $items=Payment::where('user_id', Auth::user()->id)->get();
+        }
+        return view('payments.index', compact('items'));
     }
 
     /**
