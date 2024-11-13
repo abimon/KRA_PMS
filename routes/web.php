@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MpesaController;
 use App\Http\Controllers\PayController;
 use App\Http\Controllers\PaymentController;
@@ -13,7 +14,7 @@ Route::get("/logout", function () {
     return redirect("/");
 });
 Route::middleware('auth')->group(function () {
-    Route::get('/', [PayController::class, 'index'])->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::resources([
         'payee' => PayController::class,
         'user' => UserController::class,
