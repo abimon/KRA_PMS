@@ -170,6 +170,40 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="row mb-3">
+                                    <label for="email"
+                                        class="col-md-4 col-form-label text-md-end">{{ __("Employer's Name") }}</label>
+                                    <div class="col-md-8">
+                                        <input id="employer" type="text"
+                                            class="form-control @error('employer') is-invalid @enderror" name="employer"
+                                            value="{{ old('employer') }}" required autocomplete="employer">
+
+                                        @error('employer')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row mb-3">
+                                    <label for="email"
+                                        class="col-md-4 col-form-label text-md-end">{{ __("Employer's KRA") }}</label>
+                                    <div class="col-md-8">
+                                        <input id="employer_kra" type="text"
+                                            class="form-control @error('employer_kra') is-invalid @enderror" name="employer_kra"
+                                            value="{{ old('employer_kra') }}" required autocomplete="employer_kra">
+
+                                        @error('employer_kra')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row mb-3">
                                     <label for="password"
                                         class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
                                     <div class="col-md-8">
