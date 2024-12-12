@@ -21,7 +21,7 @@ class PaymentController extends Controller
             'consumer_secret' => $consumer_secret
         ]);
         $url = 'https://pay.pesapal.com/v3/api/Auth/RequestToken';
-        $response = Http::withOptions(['verify'=>false])->withBody($data, 'application/json')->withHeaders(['Content-Type : application/json'])->post($url);
+        $response = Http::withOptions(['verify' => false])->withBody($data, 'application/json')->withHeaders(['Content-Type : application/json'])->post($url);
         $access_token = json_decode($response);
         return $access_token->token;
     }
@@ -32,13 +32,15 @@ class PaymentController extends Controller
             'url' => 'https://krapms.apektechinc.com/pay'
         ]);
         $url = 'https://pay.pesapal.com/v3/api/URLSetup/RegisterIPN';
-        $response = Http::withOptions(['verify'=>false])->withToken($this->generate_token())->withBody($data, 'application/json')->withHeaders(['Content-Type : application/json'])->post($url);
+        $response = Http::withOptions(['verify' => false])->withToken($this->generate_token())->withBody($data, 'application/json')->withHeaders(['Content-Type : application/json'])->post($url);
         return json_decode($response)->ipn_id;
     }
-    function pay($amount, $account,$id)
+    function pay($amount, $account, $id)
     {
-            $tid = strtoupper(uniqid());
-            $user = User::findOrFail($id);
+        $tid = strtoupper(uniqid());
+        $user = User::findOrFail($id);
+        $pay = Payment::where([['user_id', $id], ['TransactionId', $account]])->first();
+        if (!$pay) {
             $data = json_encode([
                 "id" => $tid,
                 "currency" => "KES",
@@ -56,7 +58,7 @@ class PaymentController extends Controller
                     "last_name" => $user->lname,
                 ]
             ]);
-            $res = Http::withOptions(['verify'=>false])->withToken($this->generate_token())->withBody($data, 'application/json')->withHeaders(['Content-Type : application/json'])->post('https://pay.pesapal.com/v3/api/Transactions/SubmitOrderRequest');
+            $res = Http::withOptions(['verify' => false])->withToken($this->generate_token())->withBody($data, 'application/json')->withHeaders(['Content-Type : application/json'])->post('https://pay.pesapal.com/v3/api/Transactions/SubmitOrderRequest');
             $response = json_decode($res);
             // return $response->merchant_reference;
             $order_tracking_id = $response->order_tracking_id;
@@ -68,18 +70,24 @@ class PaymentController extends Controller
                 'amount' => $amount,
                 'merchant_reference' => $response->merchant_reference,
                 'tracking_id' => $order_tracking_id,
-                'redirect_url'=>$redirect_url,
+                'redirect_url' => $redirect_url,
             ]);
+
             return view('payout', compact('redirect_url'));
-        
+        } elseif ($pay->payment_status_description != 'Completed') {
+            $redirect_url = $pay->redirect_url;
+            return view('payout', compact('redirect_url'));
+        } else {
+            return redirect()->back()->with('error', 'Payment already processed.');
+        }
+
     }
     public function index()
     {
-        if(Auth::user()->isAdmin){
+        if (Auth::user()->isAdmin) {
             $items = Payment::all();
-        }
-        else{
-            $items=Payment::where('user_id', Auth::user()->id)->get();
+        } else {
+            $items = Payment::where('user_id', Auth::user()->id)->get();
         }
         return view('payments.index', compact('items'));
     }
@@ -89,9 +97,10 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        
+
     }
-    public function save(){
+    public function save()
+    {
         $pay = Payment::where([["tracking_id", request('OrderTrackingId')], ['merchant_reference', request('OrderMerchantReference')]])->first();
         $url = 'https://pay.pesapal.com/v3/api/Transactions/GetTransactionStatus?orderTrackingId=' . $pay->tracking_id;
         $res = Http::withToken($this->generate_token())->withHeaders(['Content-Type : application/json'])->get($url);
@@ -104,7 +113,7 @@ class PaymentController extends Controller
             $pay->payment_status_description = $response->payment_status_description;
             $pay->update();
             Pay::where('id', $pay->TransactionId)->update(['status' => true]);
-            return redirect('/payee')->with('success','Payment made successfully.');
+            return redirect('/payee')->with('success', 'Payment made successfully.');
         }
         return $response;
     }
@@ -114,10 +123,10 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        $id = request('id');
-        $amount = 10;
-        $account = request('account');
-        return $this->pay($amount,$account,$id);
+        $id = request('item');
+        $amount = request('amount');
+        $account = Pay::findOrFail($id);
+        return $this->pay($amount, $account->id, Auth::user()->id);
     }
 
     /**
@@ -141,7 +150,7 @@ class PaymentController extends Controller
      */
     public function update()
     {
-        
+
     }
 
     /**

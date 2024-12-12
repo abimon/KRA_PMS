@@ -42,25 +42,7 @@
             </div>
         </div>
         <!-- Spinner End -->
-
-
-        <!-- Sign In Start -->
-        <div class="container-fluid">
-            <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
-                <div class="col-md-8">
-                    <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <a href="/" class="">
-                                <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>KRA PMS</h3>
-                            </a>
-                            <h3>{{$title}}</h3>
-                        </div>
-                        @yield('content')
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Sign In End -->
+        @yield('content')
     </div>
 
     <!-- JavaScript Libraries -->

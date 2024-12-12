@@ -1,7 +1,7 @@
 @extends('layouts.dashboard',['title'=>'Salary Records'])
 @section('dashboard')
 <!-- Button trigger modal -->
-<div class="text-center mb-2">
+<div class="text-center mb-2 mt-2">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pay">
         Register PAYE
     </button>
@@ -15,7 +15,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="payee">Register PAYE</h1>
+                <h1 class="modal-title fs-5 text-dark" id="payee">Register PAYE</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{route('payee.store')}}" method="post">
@@ -54,38 +54,6 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <label for="insurance"
-                            class="col-md-4 col-form-label text-md-end text-dark">{{ __('S.H.I.F') }}</label>
-
-                        <div class="col-md-8">
-                            <input id="insurance" type="number"
-                                class="form-control @error('insurance') is-invalid @enderror" name="insurance"
-                                value="{{ old('insurance') }}" required autocomplete="insurance" autofocus>
-
-                            @error('insurance')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="pension"
-                            class="col-md-4 col-form-label text-md-end text-dark">{{ __('Pension') }}</label>
-
-                        <div class="col-md-8">
-                            <input id="pension" type="number"
-                                class="form-control @error('pension') is-invalid @enderror" name="pension"
-                                value="{{ old('pension') }}" required autocomplete="pension" autofocus>
-
-                            @error('pension')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
@@ -100,7 +68,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="payee">Get PAYE Records</h1>
+                <h1 class="modal-title fs-5 text-dark" id="payee">Get PAYE Records</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{route('payee.edit',3)}}" method="post">
@@ -133,7 +101,7 @@
         <th>NSSF</th>
         <th>Payee</th>
         <th>Status</th>
-        <th colspan="4" class="text-center">Action</th>
+        <th colspan="2" class="text-center">Action</th>
     </thead>
     <tbody>
         @foreach ($items as $key => $item)
@@ -143,7 +111,7 @@
                 <td>{{$item->allowances}}</td>
                 <td>{{$item->insurance}}</td>
                 <td>{{$item->pension}}</td>
-                <td>{{$payee[$key]}}</td>
+                <td>{{number_format($payee[$key],2)}}</td>
                 <td>
                     @if ($item->status==true)
                     <span class='text-success'>Payment Successful</span>
@@ -160,7 +128,7 @@
                         <button type="submit" class="btn btn-primary">View</button>
                     </form>
                 </td>
-                <td>
+                <!-- <td>
                     <form action="{{route('payee.edit', $item->id)}}" method="post">
                         @csrf
                         @method('GET')
@@ -173,48 +141,13 @@
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
-                </td>
+                </td> -->
                 @if($item->status==false)
                 <td>
-                    <button class="btn btn-warning text-dark" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pay{{$item->id}}">Pay Tax</button>
-                    <div class="modal fade" id="pay{{$item->id}}" tabindex="-1" aria-labelledby="pay{{$item->id}}" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="payee">Make Payment</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <form action="{{route('payment.store')}}" method="post">
-                                    @csrf
-                                    <div class="modal-body">
-                                        <input type="hidden" name="account" value="{{$item->id}}">
-                                        <input type="hidden" name="amount" value="5">
-                                        <input type="hidden" name="id" value="{{$item->user->id}}">
-                                        <div class="row mb-3">
-                                            <label for="contact" class="col-md-6 col-form-label text-md-end text-dark">{{ __('Mpesa Phone Number') }}</label>
-
-                                            <div class="col-md-6">
-                                                <input id="contact" type="text"
-                                                    class="form-control @error('contact') is-invalid @enderror"
-                                                    name="contact" value="{{ old('contact') }}" required
-                                                    autocomplete="contact" autofocus value="{{$item->user->contact}}">
-                                                @error('contact')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-success">Make Payment</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                <form action="{{route('payment.store',['amount'=>$payee[$key],'item'=>$item->id])}}" method="post">
+                @csrf
+                <button type="submit" class="btn btn-warning text-dark">Pay Tax</button>
+                </form> 
                 </td>
                 @else
                 <td></td>

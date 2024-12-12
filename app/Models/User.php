@@ -30,6 +30,7 @@ class User extends Authenticatable
         "id_number",
         "isAdmin",
         "password",
+        "avatar"
     ];
 
     /**

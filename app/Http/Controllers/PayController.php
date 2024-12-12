@@ -41,14 +41,33 @@ class PayController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store()
     {
+        $basic = request('basic_salary');
+        $allowances = request('allowances');
+        $gross = $basic+$allowances;
+        if($gross<=7000){
+            $nssf = $gross*0.06;
+        }
+        elseif($gross>7000 && $basic<=36000){
+            $nssf =420+($gross-7000)*0.06;
+        }
+        else{
+            $nssf = 420 + (29000 * 0.06);
+        }
+        $nhif_c=$gross*0.0275;
+        if($nhif_c<300){
+            $nhif = 300;
+        }
+        else{
+            $nhif = $nhif_c;
+        }
         Pay::create([
-            'user_id' => request('user_id'),
-            'basic_salary' => request('basic_salary'),
-            'allowances' => request('allowances'),
-            'pension' => request('pension'),
-            'insurance' => request('insurance'),
+            'user_id' => Auth::user()->id,
+            'basic_salary' => $basic,
+            'allowances' => $allowances,
+            'pension' => $nssf,
+            'insurance' => $nhif,
             'period' => 'Monthly'
         ]);
         return back()->with('success','Success');
@@ -126,10 +145,18 @@ class PayController extends Controller
             $band = $taxable_income - 24000;
             $payee = ($band * 0.15) + (24000 * 0.1);
         } else {
-            $band = $taxable_income;
-            $payee = ($band * 0.1);
+            $payee = 0;
         }
-        return $payee;
+        $gross=$in->basic_salary + $in->allowances;
+        $relief_c = $gross * 0.15;
+        // if ($relief_c > 5000) {
+        //     ($relief = 5000);
+        // } else {
+        //     $relief = $relief_c;
+        // }
+        $relief = 2400;
+        $paye = $payee - $relief;
+        return $paye;
     }
     function generate_token()
     {

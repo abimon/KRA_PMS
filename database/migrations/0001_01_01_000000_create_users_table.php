@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('kra_pin')->nullable();
             $table->string('id_number')->nullable();
             $table->boolean('isAdmin');
+            $table->string("avatar");
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

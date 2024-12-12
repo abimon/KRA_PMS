@@ -25,7 +25,7 @@
                     @else
                     <span class="text-success">Completed</span>
                     @endif
-                </td>o
+                </td>
             </tr>
         @endforeach
     </tbody>

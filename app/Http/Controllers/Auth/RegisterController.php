@@ -58,6 +58,7 @@ class RegisterController extends Controller
             'contact' => ['required', 'string', 'max:13','min:8'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'avatar' => ['required', 'image']
         ]);
     }
 
@@ -69,6 +70,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        if(request()->hasFile('avatar')){
+            $image = request()->file('avatar');
+            $name = $data['fname'].time(). '.'. $image->getClientOriginalExtension();
+            $destinationPath = public_path('/uploads/avatars');
+            $image->move($destinationPath, $name);
+            $path = '/uploads/avatars/' . $name;
+        }
+
         return User::create([
             'fname' => $data['fname'],
             'mname' => $data['mname'],
@@ -81,6 +90,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role'=>'Taxpayer',
+            'avatar'=>$path,
             'isAdmin'=>false,
         ]);
     }
