@@ -145,7 +145,7 @@ class PayController extends Controller
             $band = $taxable_income - 24000;
             $payee = ($band * 0.15) + (24000 * 0.1);
         } else {
-            $payee = 0;
+            $payee = ($taxable_income * 0.1);
         }
         $gross=$in->basic_salary + $in->allowances;
         $relief_c = $gross * 0.15;
