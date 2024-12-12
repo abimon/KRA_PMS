@@ -44,7 +44,7 @@ class PaymentController extends Controller
             $data = json_encode([
                 "id" => $tid,
                 "currency" => "KES",
-                "amount" => $amount,
+                "amount" => env('APP_ENV')?$amount:10,
                 "description" => "Payment description goes here",
                 "callback_url" => "https://krapms.apektechinc.com/payment/save",
                 "redirect_mode" => "",
