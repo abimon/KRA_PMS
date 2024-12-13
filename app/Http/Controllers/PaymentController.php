@@ -44,7 +44,7 @@ class PaymentController extends Controller
             $data = json_encode([
                 "id" => $tid,
                 "currency" => "KES",
-                "amount" => env('APP_ENV')?$amount:10,
+                "amount" => env('APP_ENV')=='production'?$amount:10,
                 "description" => "Payment description goes here",
                 "callback_url" => "https://krapms.apektechinc.com/payment/save",
                 "redirect_mode" => "",
@@ -121,12 +121,11 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store()
     {
         $id = request('item');
         $amount = request('amount');
-        $account = Pay::findOrFail($id);
-        return $this->pay($amount, $account->id, Auth::user()->id);
+        return $this->pay($amount, $id, Auth::user()->id);
     }
 
     /**
