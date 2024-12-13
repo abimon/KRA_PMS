@@ -46,7 +46,7 @@ class PaymentController extends Controller
                 "currency" => "KES",
                 "amount" => env('APP_ENV')=='production'?$amount:10,
                 "description" => "Payment description goes here",
-                "callback_url" => "https://krapms.apektechinc.com/payment/save",
+                "callback_url" => "https://krapms.apektechinc.com/payments/save",
                 "redirect_mode" => "",
                 "notification_id" => $this->generate_ipn(),
                 "branch" => "Main Store",
