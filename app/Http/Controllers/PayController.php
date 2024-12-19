@@ -102,7 +102,12 @@ class PayController extends Controller
         return $pdf->stream();
         // return view('report', compact('transactions','payee'));
     }
-
+public function formpr(){
+    $transactions = Pay::all();
+    $pdf = Pdf::loadView('returnform', compact('transactions'));
+        $pdf->setPaper('A4','Portrait');
+        return $pdf->stream();
+}
     /**
      * Update the specified resource in storage.
      */

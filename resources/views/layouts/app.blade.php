@@ -10,7 +10,7 @@
 
     <!-- Favicon -->
     <link href="{{asset('storage/images/kra.png')}}" rel="icon">
-
+    <link rel="canonical" href="{{request()->path}}">
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,7 +43,12 @@
         </div>
         <!-- Spinner End -->
         @yield('content')
+
+        
     </div>
+    <div class="text-center">
+            <a href="/returnform">Tax Retun Form</a>
+        </div>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

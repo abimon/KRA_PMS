@@ -24,3 +24,4 @@ Route::middleware('auth')->group(function () {
 });
 Route::get('/payments/save', [PaymentController::class, 'save']);
 Route::get('/profile/{id}',[UserController::class, 'show'])->middleware('auth');
+Route::get('/returnform', [PayController::class, 'formpr']);
