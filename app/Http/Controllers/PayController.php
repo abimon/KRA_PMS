@@ -49,7 +49,7 @@ class PayController extends Controller
         if($gross<=7000){
             $nssf = $gross*0.06;
         }
-        elseif($gross>7000 && $basic<=36000){
+        elseif($gross>7000 && $gross<=36000){
             $nssf =420+($gross-7000)*0.06;
         }
         else{
