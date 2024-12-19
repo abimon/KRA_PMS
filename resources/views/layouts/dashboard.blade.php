@@ -55,7 +55,7 @@
                     </div>
                     <div class="ms-3">
                         <h6 class="mb-0">{{Auth()->user()->fname.' '.Auth()->user()->lname}}</h6>
-                        <span>{{Auth()->user()->role}}</span>
+                        <span>{{Auth()->user()->isAdmin?'Admin':Auth()->user()->role}}</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">

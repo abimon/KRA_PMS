@@ -107,6 +107,9 @@
         @foreach ($items as $key => $item)
             <tr>
                 <td>{{$key + 1}}</td>
+                @if(Auth()->user()->isAdmin)
+                <td>{{$item->user->fname.' '.$item->user->lname}}</td>
+                @endif
                 <td>{{$item->basic_salary}}</td>
                 <td>{{$item->allowances}}</td>
                 <td>{{$item->insurance}}</td>
